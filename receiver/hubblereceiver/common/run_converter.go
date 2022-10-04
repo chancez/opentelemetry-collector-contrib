@@ -19,13 +19,12 @@ import (
 	"fmt"
 	"io"
 
+	flowV1 "github.com/cilium/cilium/api/v1/flow"
+	"github.com/cilium/cilium/api/v1/observer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/reflect/protoreflect"
-
-	flowV1 "github.com/cilium/cilium/api/v1/flow"
-	"github.com/cilium/cilium/api/v1/observer"
 )
 
 type Converter interface {

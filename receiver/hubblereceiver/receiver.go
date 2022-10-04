@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package recevier implements an OpenTelemetry reciever that connects to Hubble API
+// Package receiver implements an OpenTelemetry receiver that connects to Hubble API
 // and can produce trace or logs data.
 package receiver
 
@@ -24,13 +24,11 @@ import (
 
 	zaphook "github.com/Sytten/logrus-zap-hook"
 	"github.com/sirupsen/logrus"
-	"go.uber.org/zap"
-
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/reflect/protoreflect"
-
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/logs"
@@ -78,11 +76,11 @@ func newHubbleReceiver(cfg *Config, settings component.ReceiverCreateSettings) *
 }
 
 func (r *hubbleReceiver) Start(_ context.Context, host component.Host) error {
-	// custom backgorund context must be used for long-running tasks
+	// custom background context must be used for long-running tasks
 	// (see https://github.com/open-telemetry/opentelemetry-collector/blob/v0.38.0/component/component.go#L41-L45)
 	r.ctx, r.cancel = context.WithCancel(context.Background())
 
-	dialOpts, err := r.cfg.GRPCClientSettings.ToDialOptions(host)
+	dialOpts, err := r.cfg.GRPCClientSettings.ToDialOptions(host, r.settings.TelemetrySettings)
 	if err != nil {
 		return err
 	}
@@ -104,7 +102,7 @@ func (r *hubbleReceiver) Start(_ context.Context, host component.Host) error {
 	go func() {
 		for err := range errs {
 			if err != nil {
-				r.zapLogger.Error("hubble reciever error", zap.Error(err))
+				r.zapLogger.Error("hubble receiver error", zap.Error(err))
 			}
 		}
 	}()

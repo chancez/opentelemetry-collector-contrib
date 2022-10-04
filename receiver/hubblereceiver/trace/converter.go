@@ -17,17 +17,15 @@ package trace
 import (
 	"time"
 
-	"github.com/sirupsen/logrus"
-
+	flowV1 "github.com/cilium/cilium/api/v1/flow"
+	hubbleObserver "github.com/cilium/cilium/api/v1/observer"
 	badger "github.com/dgraph-io/badger/v3"
+	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel/trace"
 	commonV1 "go.opentelemetry.io/proto/otlp/common/v1"
 	resourceV1 "go.opentelemetry.io/proto/otlp/resource/v1"
 	traceV1 "go.opentelemetry.io/proto/otlp/trace/v1"
 	"google.golang.org/protobuf/reflect/protoreflect"
-
-	flowV1 "github.com/cilium/cilium/api/v1/flow"
-	hubbleObserver "github.com/cilium/cilium/api/v1/observer"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 )
@@ -37,7 +35,7 @@ type FlowConverter struct {
 	*common.FlowEncoder
 
 	fallbackServiceNamePrefix string
-	parseHeaders        bool
+	parseHeaders              bool
 }
 
 func NewFlowConverter(
@@ -66,9 +64,9 @@ func NewFlowConverter(
 			Logger:           log,
 			IncludeFlowTypes: includeFlowTypes,
 		},
-		traceCache:          tc,
+		traceCache:                tc,
 		fallbackServiceNamePrefix: fallbackServiceNamePrefix,
-		parseHeaders:        parseHeaders,
+		parseHeaders:              parseHeaders,
 	}, nil
 }
 

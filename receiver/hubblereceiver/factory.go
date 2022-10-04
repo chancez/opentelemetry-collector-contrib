@@ -26,7 +26,8 @@ import (
 )
 
 const (
-	typeStr = "hubble"
+	typeStr   = "hubble"
+	stability = component.StabilityLevelAlpha
 )
 
 var receivers = make(map[config.Receiver]*hubbleReceiver)
@@ -40,11 +41,11 @@ func getReceiver(cfg config.Receiver, settings component.ReceiverCreateSettings)
 	return r
 }
 func NewFactory() component.ReceiverFactory {
-	return component.NewFactory(
+	return component.NewReceiverFactory(
 		typeStr,
 		createDefaultConfig,
-		component.WithTraces(createTracesReceiver),
-		component.WithLogs(createLogsReceiver))
+		component.WithTracesReceiver(createTracesReceiver, stability),
+		component.WithLogsReceiver(createLogsReceiver, stability))
 }
 
 func createDefaultConfig() config.Receiver {

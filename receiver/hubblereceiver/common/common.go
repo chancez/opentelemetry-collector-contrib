@@ -14,7 +14,7 @@
 
 // Package common contains all of logic that is shared between trace and logs packages.
 // The main concern of this package is to format Hubble flow data using OpenTelemetry
-// structures. A few different formats are implemented to make it easier to optimise
+// structures. A few different formats are implemented to make it easier to optimize
 // the data for different OpenTelemetry backends, e.g. some backends accept arbitrarily
 // nested data, while others only handle flat maps.
 // This package also implements conversion of label and HTTP headers to maps, which
@@ -26,17 +26,15 @@ import (
 	"fmt"
 	"strings"
 
+	flowV1 "github.com/cilium/cilium/api/v1/flow"
+	"github.com/cilium/cilium/api/v1/observer"
+	hubbleLabels "github.com/cilium/hubble-ui/backend/domain/labels"
 	"github.com/sirupsen/logrus"
-
 	commonV1 "go.opentelemetry.io/proto/otlp/common/v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	timestamp "google.golang.org/protobuf/types/known/timestamppb"
-
-	flowV1 "github.com/cilium/cilium/api/v1/flow"
-	"github.com/cilium/cilium/api/v1/observer"
-	hubbleLabels "github.com/cilium/hubble-ui/backend/domain/labels"
 )
 
 const (
@@ -196,18 +194,18 @@ func (o *EncodingOptions) validateFormat(dataType string, formats []string) erro
 	return nil
 }
 
-func (c *FlowEncoder) ToValue(hubbleResp *observer.GetFlowsResponse) (*commonV1.AnyValue, error) {
+func (fe *FlowEncoder) ToValue(hubbleResp *observer.GetFlowsResponse) (*commonV1.AnyValue, error) {
 	overrideOptionsWithWarning := func() {
-		if c.WithTopLevelKeys() && !c.WithLogPayloadAsBody() {
-			if c.Logger != nil {
-				c.Logger.Warnf("encoder: disabling \"TopLevelKeys\" option as it's incompatible"+
-					" with %q encoding when \"LogPayloadAsBody\" disabled also", c.EncodingFormat())
+		if fe.WithTopLevelKeys() && !fe.WithLogPayloadAsBody() {
+			if fe.Logger != nil {
+				fe.Logger.Warnf("encoder: disabling \"TopLevelKeys\" option as it's incompatible"+
+					" with %q encoding when \"LogPayloadAsBody\" disabled also", fe.EncodingFormat())
 			}
-			*c.TopLevelKeys = false
+			*fe.TopLevelKeys = false
 		}
 	}
 
-	switch format := c.EncodingFormat(); format {
+	switch format := fe.EncodingFormat(); format {
 	case EncodingJSON, EncodingJSONBASE64:
 		overrideOptionsWithWarning()
 
@@ -229,27 +227,27 @@ func (c *FlowEncoder) ToValue(hubbleResp *observer.GetFlowsResponse) (*commonV1.
 		switch format {
 		case EncodingFlatStringMap:
 			mb = &flatStringMap{
-				labelsAsMaps:  c.WithLabelsAsMaps(),
-				headersAsMaps: c.WithHeadersAsMaps(),
+				labelsAsMaps:  fe.WithLabelsAsMaps(),
+				headersAsMaps: fe.WithHeadersAsMaps(),
 				separator:     '.',
 			}
 		case EncodingSemiFlatTypedMap:
 			mb = &semiFlatTypedMap{
-				labelsAsMaps:  c.WithLabelsAsMaps(),
-				headersAsMaps: c.WithHeadersAsMaps(),
+				labelsAsMaps:  fe.WithLabelsAsMaps(),
+				headersAsMaps: fe.WithHeadersAsMaps(),
 				separator:     '.',
 			}
 		case EncodingTypedMap:
 			overrideOptionsWithWarning()
 
 			mb = &typedMap{
-				labelsAsMaps:  c.WithLabelsAsMaps(),
-				headersAsMaps: c.WithHeadersAsMaps(),
+				labelsAsMaps:  fe.WithLabelsAsMaps(),
+				headersAsMaps: fe.WithHeadersAsMaps(),
 			}
 		}
 
 		topLevel := ""
-		if c.WithTopLevelKeys() {
+		if fe.WithTopLevelKeys() {
 			topLevel = AttributeFlowEventNamespace
 		}
 

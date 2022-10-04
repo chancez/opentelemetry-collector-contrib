@@ -26,17 +26,15 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/cilium/cilium/api/v1/flow"
+	flowV1 "github.com/cilium/cilium/api/v1/flow"
 	badger "github.com/dgraph-io/badger/v3"
-
 	"go.opentelemetry.io/contrib/propagators/aws/xray"
 	"go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/contrib/propagators/jaeger"
 	"go.opentelemetry.io/contrib/propagators/ot"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-
-	"github.com/cilium/cilium/api/v1/flow"
-	flowV1 "github.com/cilium/cilium/api/v1/flow"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 )

@@ -19,17 +19,14 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+	"go.opentelemetry.io/collector/consumer"
+	"go.opentelemetry.io/collector/pdata/plog"
+	logsCollectorV1 "go.opentelemetry.io/proto/otlp/collector/logs/v1"
+	logsV1 "go.opentelemetry.io/proto/otlp/logs/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-
-	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/model/otlp"
-	"go.opentelemetry.io/collector/model/pdata"
-
-	logsCollectorV1 "go.opentelemetry.io/proto/otlp/collector/logs/v1"
-	logsV1 "go.opentelemetry.io/proto/otlp/logs/v1"
 )
 
 type BufferedLogExporter struct {
@@ -69,7 +66,7 @@ type BufferedDirectLogsExporter struct {
 	log         *logrus.Logger
 	consumer    consumer.Logs
 	bufferSize  int
-	unmarshaler pdata.LogsUnmarshaler
+	unmarshaler plog.Unmarshaler
 }
 
 func NewBufferedDirectLogsExporter(log *logrus.Logger, consumer consumer.Logs, bufferSize int) *BufferedDirectLogsExporter {
@@ -77,7 +74,7 @@ func NewBufferedDirectLogsExporter(log *logrus.Logger, consumer consumer.Logs, b
 		log:         log,
 		consumer:    consumer,
 		bufferSize:  bufferSize,
-		unmarshaler: otlp.NewProtobufLogsUnmarshaler(),
+		unmarshaler: plog.NewProtoUnmarshaler(),
 	}
 }
 

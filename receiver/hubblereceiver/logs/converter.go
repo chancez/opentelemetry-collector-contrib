@@ -15,14 +15,13 @@
 package logs
 
 import (
+	"github.com/cilium/cilium/api/v1/observer"
 	"github.com/sirupsen/logrus"
-
 	commonV1 "go.opentelemetry.io/proto/otlp/common/v1"
 	logsV1 "go.opentelemetry.io/proto/otlp/logs/v1"
 	resourceV1 "go.opentelemetry.io/proto/otlp/resource/v1"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	"github.com/cilium/cilium/api/v1/observer"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 )
 

@@ -19,10 +19,9 @@ import (
 	"errors"
 	"time"
 
-	"google.golang.org/grpc/metadata"
-
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/configgrpc"
+	"google.golang.org/grpc/metadata"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 )

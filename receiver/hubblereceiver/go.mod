@@ -11,7 +11,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.0
 	go.opentelemetry.io/collector v0.60.0
-	go.opentelemetry.io/collector/model v0.50.0
+	go.opentelemetry.io/collector/pdata v0.60.0
 	go.opentelemetry.io/contrib/propagators/aws v1.10.0
 	go.opentelemetry.io/contrib/propagators/b3 v1.9.0
 	go.opentelemetry.io/contrib/propagators/jaeger v1.10.0
@@ -101,7 +101,6 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	go.opentelemetry.io/collector/pdata v0.60.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.34.0 // indirect
 	go.opentelemetry.io/otel/metric v0.31.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.10.0 // indirect

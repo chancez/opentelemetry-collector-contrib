@@ -20,13 +20,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/config/configtest"
+	"go.opentelemetry.io/collector/service/servicetest"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hubblereceiver/common"
 )
 
 func TestLoadConfig(t *testing.T) {
@@ -41,7 +41,7 @@ func TestLoadConfig(t *testing.T) {
 	defaultEncodingOptions := defaultConfig.(*Config).FlowEncodingOptions
 
 	factories.Receivers[typeStr] = factory
-	cfg, err := configtest.LoadConfigAndValidate(path.Join(".", "testdata", "config.yaml"), factories)
+	cfg, err := servicetest.LoadConfigAndValidate(path.Join(".", "testdata", "config.yaml"), factories)
 	require.NoError(t, err)
 	require.NotNil(t, cfg)
 
@@ -68,7 +68,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, *r3.FlowEncodingOptions.Traces.TopLevelKeys, !*defaultEncodingOptions.Traces.TopLevelKeys)
 	assert.Equal(t, *r3.FlowEncodingOptions.Logs.LogPayloadAsBody, !*defaultEncodingOptions.Logs.LogPayloadAsBody)
 
-	// this is to assert that currenly defaulting of unset fields is not based on CreateDefaultConfig(), which
+	// this is to assert that currently defaulting of unset fields is not based on CreateDefaultConfig(), which
 	// is not ideal, but that is how collector configuration appears to work
 	assert.Equal(t, *r3.FlowEncodingOptions.Traces.HeadersAsMaps, !*defaultEncodingOptions.Traces.HeadersAsMaps)
 	assert.Equal(t, *r3.FlowEncodingOptions.Traces.LabelsAsMaps, !*defaultEncodingOptions.Traces.LabelsAsMaps)
