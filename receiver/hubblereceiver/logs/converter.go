@@ -17,6 +17,7 @@ package logs
 import (
 	"github.com/cilium/cilium/api/v1/observer"
 	"github.com/sirupsen/logrus"
+	"go.opentelemetry.io/collector/pdata/plog"
 	commonV1 "go.opentelemetry.io/proto/otlp/common/v1"
 	logsV1 "go.opentelemetry.io/proto/otlp/logs/v1"
 	resourceV1 "go.opentelemetry.io/proto/otlp/resource/v1"
@@ -58,6 +59,11 @@ func (c *FlowConverter) Convert(hubbleResp *observer.GetFlowsResponse) (protoref
 	if err != nil {
 		return nil, err
 	}
+
+	ld := plog.NewLogs()
+	rl := ld.ResourceLogs().AppendEmpty()
+	sl := rl.ScopeLogs().AppendEmpty()
+	lr := sl.LogRecords().AppendEmpty()
 
 	logRecord := &logsV1.LogRecord{
 		TimeUnixNano: uint64(flow.GetTime().AsTime().UnixNano()),
